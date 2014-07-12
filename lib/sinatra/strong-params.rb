@@ -1,6 +1,8 @@
 require 'sinatra/base'
 require 'sinatra/strong-params/version'
 
+class RequiredParamMissing < ArgumentError; end
+
 module Sinatra
   module StrongParams
     def self.registered(app)
@@ -42,7 +44,6 @@ module Sinatra
       app.set(:needs) do |*needed|
         condition do
           if @params.nil? || @params.empty? && !needed.empty?
-            # we're fucked, walk away
             raise RequiredParamMissing, 'One or more required parameters were missing.'
           else
             @_params   = @_params || @params # for safety
@@ -62,12 +63,13 @@ module Sinatra
       end
 
       # these will always pass through the 'allows' method
-      # and will be mapped to symbols
-      app.set :globally_allowed_parameters, ['redirect_to', '_csrf']
+      # and will be mapped to symbols. I often use ['redirect_to', '_csrf'] here
+      # because I always want them to pass through for later processing
+      app.set :globally_allowed_parameters, []
 
-      app.error RequiredParamMissing do
-        [400, 'Required parameter was missing']
-      end
+      # app.error RequiredParamMissing do
+      #   [400, env['sinatra.error'].message]
+      # end
     end
   end
 
