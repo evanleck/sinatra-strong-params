@@ -67,9 +67,10 @@ module Sinatra
       # because I always want them to pass through for later processing
       app.set :globally_allowed_parameters, []
 
-      # app.error RequiredParamMissing do
-      #   [400, env['sinatra.error'].message]
-      # end
+      # default error response
+      app.error RequiredParamMissing do
+        [400, env['sinatra.error'].message]
+      end
     end
   end
 
