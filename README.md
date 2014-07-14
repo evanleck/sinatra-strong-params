@@ -63,6 +63,18 @@ end
 ```
 
 
+
+### Both
+
+Wanna get super restrictive? Can do.
+
+```ruby
+post '/login', allows: [:email, :password], needs: [:email, :password] do
+  # handle yo business
+end
+```
+
+
 ## Contributing
 
 1. Fork it ( https://github.com/[my-github-username]/sinatra-strong-params/fork )
