@@ -18,7 +18,7 @@ module Sinatra
       #
       app.set(:allows) do |*passable|
         condition do
-          unless @params.blank?
+          unless @params.empty?
             @_params = @_params || @params # for safety
             globals  = settings.globally_allowed_parameters
             passable = (globals | passable).map(&:to_sym) # make sure it's a symbol
