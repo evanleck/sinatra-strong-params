@@ -18,7 +18,11 @@ Or install it yourself as:
 
     $ gem install sinatra-strong-params
 
+If you are using a Modular Sinatra application such as `class FooApp < Sinatra::Base` you must include any desired extensions explicitly within your Sinatra application
 
+```    
+    register Sinatra::StrongParams
+```
 
 ## Usage
 
