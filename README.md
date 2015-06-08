@@ -20,8 +20,8 @@ Or install it yourself as:
 
 If you are using a Modular Sinatra application such as `class FooApp < Sinatra::Base` you must include any desired extensions explicitly within your Sinatra application
 
-```    
-    register Sinatra::StrongParams
+```ruby
+register Sinatra::StrongParams
 ```
 
 ## Usage
