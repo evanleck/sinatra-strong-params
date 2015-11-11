@@ -24,7 +24,7 @@ module Sinatra
             passable = (globals | passable).map(&:to_sym) # make sure it's a symbol
 
             # trim the params down
-            @params = @params.select do |param, value|
+            @params = @params.select do |param, _value|
               passable.include?(param.to_sym)
             end
           end
@@ -44,9 +44,8 @@ module Sinatra
       app.set(:needs) do |*needed|
         condition do
           if @params.nil? || @params.empty? && !needed.empty?
-            raise RequiredParamMissing, 'One or more required parameters were missing.'
+            fail RequiredParamMissing, settings.missing_parameter_message
           else
-            @_params   = @_params || @params # for safety
             needed     = needed.map(&:to_sym) # make sure it's a symbol
             sym_params = @params.dup
 
@@ -56,18 +55,28 @@ module Sinatra
             end
 
             if needed.any? { |key| sym_params[key].nil? || sym_params[key].empty? }
-              raise RequiredParamMissing, 'One or more required parameters were missing.'
+              fail RequiredParamMissing, settings.missing_parameter_message
             end
           end
         end
       end
 
-      # these will always pass through the 'allows' method
-      # and will be mapped to symbols. I often use ['redirect_to', '_csrf'] here
-      # because I always want them to pass through for later processing
+      # These will always pass through the 'allows' method
+      #   and will be mapped to symbols. I often use [:redirect_to, :_csrf] here
+      #   because I always want them to pass through for later processing
       app.set :globally_allowed_parameters, []
 
-      # default error response
+      # The default message when RequiredParamMissing is raised.
+      app.set :missing_parameter_message, 'One or more required parameters were missing.'
+
+      # Change the default behavior for missing parameters by overriding this route.
+      # For example...
+      #
+      #   error RequiredParamMissing do
+      #     flash[:error] = env['sinatra.error'].message
+      #     redirect back
+      #   end
+      #
       app.error RequiredParamMissing do
         [400, env['sinatra.error'].message]
       end
