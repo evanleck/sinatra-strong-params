@@ -27,6 +27,9 @@ module Sinatra
             @params = @params.select do |param, _value|
               passable.include?(param.to_sym)
             end
+
+            # copy Hash#default_proc
+            @params.tap { |h| h.default_proc = @_params.default_proc.dup rescue nil }
           end
         end
       end
