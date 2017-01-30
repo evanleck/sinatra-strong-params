@@ -1,3 +1,5 @@
+# encoding: UTF-8
+# frozen_string_literal: true
 require 'sinatra/base'
 require 'sinatra/strong-params/version'
 
@@ -23,13 +25,15 @@ module Sinatra
             globals  = settings.globally_allowed_parameters
             passable = (globals | passable).map(&:to_sym) # make sure it's a symbol
 
-            # trim the params down
+            # Select only the allowed parameters.
             @params = @params.select do |param, _value|
               passable.include?(param.to_sym)
             end
 
-            # copy Hash#default_proc
-            @params.tap { |h| h.default_proc = @_params.default_proc.dup rescue nil }
+            # Copy Sinatra's default proc to allow indifferent access.
+            @params.tap do |params|
+              params.default_proc = @_params.default_proc.dup rescue nil
+            end
           end
         end
       end
