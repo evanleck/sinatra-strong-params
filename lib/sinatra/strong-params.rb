@@ -25,14 +25,9 @@ module Sinatra
             globals  = settings.globally_allowed_parameters
             passable = (globals | passable).map(&:to_sym) # make sure it's a symbol
 
-            # Select only the allowed parameters.
-            @params = @params.select do |param, _value|
-              passable.include?(param.to_sym)
-            end
-
-            # Copy Sinatra's default proc to allow indifferent access.
-            @params.tap do |params|
-              params.default_proc = @_params.default_proc.dup rescue nil
+            # Keep only the allowed parameters.
+            @params = @params.delete_if do |param, _value|
+              !passable.include?(param.to_sym)
             end
           end
         end
