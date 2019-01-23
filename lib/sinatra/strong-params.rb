@@ -23,7 +23,8 @@ module Sinatra
           unless @params.empty?
             @_params = @_params || @params # for safety
             globals  = settings.globally_allowed_parameters
-            passable = (globals | passable).map(&:to_sym) # make sure it's a symbol
+            needed   = @_needed || []
+            passable = (globals | passable | needed).map(&:to_sym) # make sure it's a symbol
 
             # Keep only the allowed parameters.
             @params = @params.delete_if do |param, _value|
@@ -49,6 +50,7 @@ module Sinatra
             fail RequiredParamMissing, settings.missing_parameter_message
           else
             needed     = needed.map(&:to_sym) # make sure it's a symbol
+            @_needed   = needed
             sym_params = @params.dup
 
             # symbolize the keys so we know what we're looking at
