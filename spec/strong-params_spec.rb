@@ -94,4 +94,21 @@ describe Sinatra::StrongParams do
       expect(actual_params[:action]).to eq params[:action]
     end
   end
+
+  context "using allows and needs filter" do
+        it 'supports accessing params with string keys' do
+      actual_params = nil
+      mock_app do
+        register Sinatra::StrongParams
+        get '/', needs: [:id, :action], allows: [:resource] { actual_params = params }
+      end
+      params = { id: 'id', action: 'action', resource: 'resource', not_allows: 'not_allows' }
+
+      get '/', params
+      expect(actual_params['id']).to eq params[:id]
+      expect(actual_params['action']).to eq params[:action]
+      expect(actual_params['resource']).to eq params[:resource]
+      expect(actual_params['not_allows']).to eq nil
+    end
+  end
 end
