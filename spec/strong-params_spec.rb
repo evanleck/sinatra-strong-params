@@ -3,7 +3,6 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 require_relative 'spec_helper'
-require 'json'
 require 'sinatra/strong-params'
 
 describe Sinatra::StrongParams do
@@ -86,6 +85,36 @@ describe Sinatra::StrongParams do
       get '/', request_params
       expect(actual_params[:id]).to eq request_params[:id]
       expect(actual_params[:action]).to eq request_params[:action]
+    end
+
+    context 'with missing params' do
+      context 'and empty request' do
+        let(:request_params) { nil }
+
+        it 'return an error message with the missing keys on it' do
+          mock_registerd_app do
+            get '/', needs: [:id, :name, :action] { }
+          end
+
+          get '/', request_params
+          expect(last_response.status).to eq 400
+          expect(last_response.body).to eq('One or more required parameters were missing: id, name, action')
+        end
+      end
+
+      context 'and some params are present' do
+        let(:request_params) { { id: 'id', name: '' } }
+
+        it 'return an error message with the missing keys on it' do
+          mock_registerd_app do
+            get '/', needs: [:id, :name, :action] { }
+          end
+
+          get '/', request_params
+          expect(last_response.status).to eq 400
+          expect(last_response.body).to eq('One or more required parameters were missing: name, action')
+        end
+      end
     end
   end
 
