@@ -7,14 +7,13 @@ require 'json'
 require 'sinatra/strong-params'
 
 describe Sinatra::StrongParams do
-  context "using allows filter" do
-    context "with no nested params" do
+  context 'using allows filter' do
+    context 'with no nested params' do
       let(:request_params) { { id: 'id', action: 'action', not_allows: 'not_allows' } }
 
       it 'supports accessing params with string keys' do
         actual_params = nil
-        mock_app do
-          register Sinatra::StrongParams
+        mock_registerd_app do
           get '/', allows: [:id, :action] { actual_params = params }
         end
 
@@ -26,8 +25,7 @@ describe Sinatra::StrongParams do
 
       it 'supports accessing params with symbol keys' do
         actual_params = nil
-        mock_app do
-          register Sinatra::StrongParams
+        mock_registerd_app do
           get '/', allows: [:id, :action] { actual_params = params }
         end
 
@@ -38,13 +36,12 @@ describe Sinatra::StrongParams do
       end
     end
 
-    context "with nested params" do
+    context 'with nested params' do
       let(:request_params) { { id: [ { in_array: 'in_array'} ], action: { nested_hash: 'nested_hash'} }}
 
       it 'supports accessing params with string keys' do
         actual_params = nil
-        mock_app do
-          register Sinatra::StrongParams
+        mock_registerd_app do
           get '/', allows: [:id, :action] { actual_params = params }
         end
 
@@ -55,8 +52,7 @@ describe Sinatra::StrongParams do
 
       it 'supports accessing params with symbol keys' do
         actual_params = nil
-        mock_app do
-          register Sinatra::StrongParams
+        mock_registerd_app do
           get '/', allows: [:id, :action] { actual_params = params }
         end
 
@@ -67,47 +63,45 @@ describe Sinatra::StrongParams do
     end
   end
 
-  context "using needs filter" do
+  context 'using needs filter' do
+    let(:request_params) { { id: 'id', action: 'action' } }
+
     it 'supports accessing params with string keys' do
       actual_params = nil
-      mock_app do
-        register Sinatra::StrongParams
+      mock_registerd_app do
         get '/', needs: [:id, :action] { actual_params = params }
       end
-      params = { id: 'id', action: 'action' }
 
-      get '/', params
-      expect(actual_params['id']).to eq params[:id]
-      expect(actual_params['action']).to eq params[:action]
+      get '/', request_params
+      expect(actual_params['id']).to eq request_params[:id]
+      expect(actual_params['action']).to eq request_params[:action]
     end
 
     it 'supports accessing params with symbol keys' do
       actual_params = nil
-      mock_app do
-        register Sinatra::StrongParams
+      mock_registerd_app do
         get '/', needs: [:id, :action] { actual_params = params }
       end
-      params = { id: 'id', action: 'action' }
 
-      get '/', params
-      expect(actual_params[:id]).to eq params[:id]
-      expect(actual_params[:action]).to eq params[:action]
+      get '/', request_params
+      expect(actual_params[:id]).to eq request_params[:id]
+      expect(actual_params[:action]).to eq request_params[:action]
     end
   end
 
-  context "using allows and needs filter" do
-        it 'supports accessing params with string keys' do
+  context 'using allows and needs filter' do
+    let(:request_params) { { id: 'id', action: 'action', resource: 'resource', not_allows: 'not_allows' } }
+
+    it 'supports accessing params with string keys' do
       actual_params = nil
-      mock_app do
-        register Sinatra::StrongParams
+      mock_registerd_app do
         get '/', needs: [:id, :action], allows: [:resource] { actual_params = params }
       end
-      params = { id: 'id', action: 'action', resource: 'resource', not_allows: 'not_allows' }
 
-      get '/', params
-      expect(actual_params['id']).to eq params[:id]
-      expect(actual_params['action']).to eq params[:action]
-      expect(actual_params['resource']).to eq params[:resource]
+      get '/', request_params
+      expect(actual_params['id']).to eq request_params[:id]
+      expect(actual_params['action']).to eq request_params[:action]
+      expect(actual_params['resource']).to eq request_params[:resource]
       expect(actual_params['not_allows']).to eq nil
     end
   end
