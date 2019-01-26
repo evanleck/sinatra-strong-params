@@ -1,5 +1,8 @@
 # Sinatra::StrongParams
 
+[![Gem Version](https://badge.fury.io/rb/sinatra-strong-params.svg)](https://badge.fury.io/rb/sinatra-strong-params)
+[![Build Status](https://secure.travis-ci.org/evanleck/sinatra-strong-params.svg)](https://travis-ci.org/evanleck/sinatra-strong-params)
+
 A really naive parameter filtering implementation for Sinatra.
 
 
