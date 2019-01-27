@@ -11,6 +11,13 @@ module TestHelper
     end
   end
 
+  def mock_registerd_app(&block)
+    @app = mock_app do
+      register Sinatra::StrongParams
+      class_eval(&block)
+    end
+  end
+
   def app
     @app
   end

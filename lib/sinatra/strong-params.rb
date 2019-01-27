@@ -46,32 +46,29 @@ module Sinatra
       #
       app.set(:needs) do |*needed|
         condition do
-          if @params.nil? || @params.empty? && !needed.empty?
-            fail RequiredParamMissing, settings.missing_parameter_message
-          else
-            needed     = needed.map(&:to_sym) # make sure it's a symbol
-            @_needed   = needed
-            sym_params = @params.dup
+          needed     = needed.map(&:to_sym) # make sure it's a symbol
+          @_needed   = needed
+          sym_params = @params.dup
 
-            # symbolize the keys so we know what we're looking at
-            sym_params.keys.each do |key|
-              sym_params[(key.to_sym rescue key) || key] = sym_params.delete(key)
-            end
+          # symbolize the keys so we know what we're looking at
+          sym_params.keys.each do |key|
+            sym_params[(key.to_sym rescue key) || key] = sym_params.delete(key)
+          end
 
-            if needed.any? { |key| sym_params[key].nil? || sym_params[key].empty? }
-              fail RequiredParamMissing, settings.missing_parameter_message
-            end
+          missing_params = needed.select { |key| sym_params[key].nil? || sym_params[key].empty? }
+          if missing_params.any?
+            fail RequiredParamMissing, "#{settings.missing_parameter_message} #{missing_params.join(', ')}"
           end
         end
       end
 
       # These will always pass through the 'allows' method
-      #   and will be mapped to symbols. I often use [:redirect_to, :_csrf] here
-      #   because I always want them to pass through for later processing
+      # and will be mapped to symbols. I often use [:redirect_to, :_csrf] here
+      # because I always want them to pass through for later processing
       app.set :globally_allowed_parameters, []
 
       # The default message when RequiredParamMissing is raised.
-      app.set :missing_parameter_message, 'One or more required parameters were missing.'
+      app.set :missing_parameter_message, 'One or more required parameters were missing:'
 
       # Change the default behavior for missing parameters by overriding this route.
       # For example...
