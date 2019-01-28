@@ -7,10 +7,9 @@ require 'sinatra/strong-params/version'
 Gem::Specification.new do |spec|
   spec.name          = 'sinatra-strong-params'
   spec.version       = Sinatra::StrongParams::VERSION
-  spec.authors       = ['Evan Lecklider']
-  spec.email         = ['evan@lecklider.com']
-  spec.summary       = 'Some super basic strong parameter filters for Sinatra.'
-  spec.description   = spec.summary
+  spec.authors       = ['Evan Lecklider', 'Gustavo Sobral']
+  spec.email         = ['evan@lecklider.com', 'ghsobral@gmail.com']
+  spec.summary       = 'Basic strong parameter filters for Sinatra.'
   spec.homepage      = 'https://github.com/evanleck/sinatra-strong-params'
   spec.license       = 'MIT'
 
