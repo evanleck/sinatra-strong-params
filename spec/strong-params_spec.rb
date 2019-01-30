@@ -13,7 +13,9 @@ describe Sinatra::StrongParams do
       it 'supports accessing params with string keys' do
         actual_params = nil
         mock_registerd_app do
-          get '/', allows: [:id, :action] { actual_params = params }
+          get '/', allows: [:id, :action] do
+            actual_params = params
+          end
         end
 
         get '/', request_params
@@ -25,7 +27,9 @@ describe Sinatra::StrongParams do
       it 'supports accessing params with symbol keys' do
         actual_params = nil
         mock_registerd_app do
-          get '/', allows: [:id, :action] { actual_params = params }
+          get '/', allows: [:id, :action] do
+            actual_params = params
+          end
         end
 
         get '/', request_params
@@ -41,7 +45,9 @@ describe Sinatra::StrongParams do
       it 'supports accessing params with string keys' do
         actual_params = nil
         mock_registerd_app do
-          get '/', allows: [:id, :action] { actual_params = params }
+          get '/', allows: [:id, :action] do
+            actual_params = params
+          end
         end
 
         get '/', request_params
@@ -52,7 +58,9 @@ describe Sinatra::StrongParams do
       it 'supports accessing params with symbol keys' do
         actual_params = nil
         mock_registerd_app do
-          get '/', allows: [:id, :action] { actual_params = params }
+          get '/', allows: [:id, :action] do
+            actual_params = params
+          end
         end
 
         get '/', request_params
@@ -68,7 +76,9 @@ describe Sinatra::StrongParams do
     it 'supports accessing params with string keys' do
       actual_params = nil
       mock_registerd_app do
-        get '/', needs: [:id, :action] { actual_params = params }
+        get '/', needs: [:id, :action] do
+          actual_params = params
+        end
       end
 
       get '/', request_params
@@ -79,7 +89,9 @@ describe Sinatra::StrongParams do
     it 'supports accessing params with symbol keys' do
       actual_params = nil
       mock_registerd_app do
-        get '/', needs: [:id, :action] { actual_params = params }
+        get '/', needs: [:id, :action] do
+          actual_params = params
+        end
       end
 
       get '/', request_params
@@ -93,7 +105,8 @@ describe Sinatra::StrongParams do
 
         it 'return an error message with the missing keys on it' do
           mock_registerd_app do
-            get '/', needs: [:id, :name, :action] { }
+            get '/', needs: [:id, :name, :action] do
+            end
           end
 
           get '/', request_params
@@ -107,7 +120,8 @@ describe Sinatra::StrongParams do
 
         it 'return an error message with the missing keys on it' do
           mock_registerd_app do
-            get '/', needs: [:id, :name, :action] { }
+            get '/', needs: [:id, :name, :action] do
+            end
           end
 
           get '/', request_params
@@ -124,7 +138,9 @@ describe Sinatra::StrongParams do
     it 'supports accessing params with string keys' do
       actual_params = nil
       mock_registerd_app do
-        get '/', needs: [:id, :action], allows: [:resource] { actual_params = params }
+        get '/', needs: [:id, :action], allows: [:resource] do
+          actual_params = params
+        end
       end
 
       get '/', request_params
